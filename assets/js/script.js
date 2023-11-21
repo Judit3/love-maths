@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(){
     for (let button of buttons){
         button.addEventListener("click", function(){
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked submit!");
+                checkAnswer();
             } else {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
@@ -29,13 +29,13 @@ function runGame(gameType) {
     let num1 = Math.floor(Math.random() * 25) + 1;
     let num2 = Math.floor(Math.random() * 25) + 1;
 
-    if (gameType === "addition"){
+    if (gameType === "addition") {
         displayAdditionQuestion(num1, num2);
-    } else if (gameType === "multiply"){
+    } else if (gameType === "multiply") {
         displayMultiplyQuestion(num1, num2);
-    } else if (gameType === "subtract"){
+    } else if (gameType === "subtract") {
         displaySubtractQuestion(num1, num2);
-    } else if (gameType === "division"){
+    } else if (gameType === "division") {
         displayDivisionQuestion(num1, num2);
     } else {
         alert(`Unknown game type: ${gameType}`);
@@ -44,8 +44,24 @@ function runGame(gameType) {
 
 }
 
+/**
+ * Checks the answer against the first element in 
+ * the returned claculateCorrectAnswer array
+ */
 function checkAnswer() {
     
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let calculatedAnswer = calculateCorrectAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
+
+    if (isCorrect) {
+        alert("Hey! You got it right! :D");
+    } else {
+        alert(`Awww... you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}!`);
+    }
+
+    runGame(calculatedAnswer[1]);
+
 }
 
 /**
@@ -63,7 +79,7 @@ function calculateCorrectAnswer() {
     } else if (operator === "x") {
         return [operand1 * operand2, "multiply"];
     } else if (operator === "-") {
-        return [Math.abs(operand1 - operand2), "subtract"];
+        return [operand1 - operand2, "subtract"];
     } else if (operator === "/") {
         return [operand1 / operand2, "division"];
         alert(`Unimplemented operator ${operator}`)
@@ -88,8 +104,8 @@ function displayAdditionQuestion(operand1, operand2) {
 
 function displaySubtractQuestion(operand1, operand2) {
    
-    document.getElementById("operand1").textContent = operand1;
-    document.getElementById("operand2").textContent = operand2;
+    document.getElementById("operand1").textContent = operand1 > operand2 ? operand1 : operand2;
+    document.getElementById("operand2").textContent = operand1 > operand2 ? operand2 : operand1;
     document.getElementById("operator").textContent = "-";
 }
 
